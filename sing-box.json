@@ -1,0 +1,264 @@
+{
+  "log": {
+    "disabled": false,
+    "level": "warn",
+    "output": "box.log",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "china",
+        "type": "udp",
+        "server": "119.29.29.29",
+        "server_port": 53
+      },
+      {
+        "tag": "fake",
+        "type": "fakeip",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      },
+      {
+        "tag": "ts",
+        "type": "tailscale",
+        "endpoint": "ts"
+      }
+    ],
+    "rules_gui": [
+      { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [{ "rule_set": "global" }, { "query_type": "HTTPS" }],
+        "action": "predefined",
+        "rcode": "NOERROR"
+      },
+      { "query_type": ["A", "AAAA"], "server": "fake" }
+    ],
+    "rules_tethering": [
+      { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [{ "rule_set": "global" }, { "query_type": "HTTPS" }],
+        "action": "predefined",
+        "rcode": "NOERROR"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          { "rule_set": ["chinamaxnoip", "wechat", "apple"] },
+          { "query_type": "AAAA" }
+        ],
+        "server": "china"
+      },
+      { "query_type": ["AAAA"], "action": "predefined", "rcode": "NOERROR" },
+      { "query_type": ["A"], "server": "fake" }
+    ],
+    "final": "china",
+    "independent_cache": true
+  },
+  "inbounds": [
+    {
+      "tag": "http",
+      "type": "http",
+      "listen": "127.0.0.1",
+      "listen_port": 6152
+    },
+    {
+      "tag": "socks",
+      "type": "socks",
+      "listen": "127.0.0.1",
+      "listen_port": 6153
+    },
+    {
+      "tag": "tun",
+      "type": "tun",
+      "address": ["172.18.0.1/30", "fdfe:dcba:9876::1/126"],
+      "auto_route": true,
+      "loopback_address": ["10.7.0.1"],
+      "stack": "mixed",
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 6152,
+          "bypass_domain": ["localhost", "*.local", "captive.apple.com"],
+          "match_domain": []
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "proxy",
+      "type": "selector",
+      "outbounds": ["xx", "hk", "us"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "home",
+      "type": "selector",
+      "outbounds": ["direct"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "final",
+      "type": "selector",
+      "outbounds": ["proxy", "direct"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "xx",
+      "type": "urltest",
+      "outbounds": [],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "hk",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://captive.apple.com"
+    },
+    {
+      "tag": "us",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://captive.apple.com"
+    },
+    {
+      "tag": "direct",
+      "type": "direct"
+    }
+  ],
+  "route": {
+    "default_domain_resolver": "china",
+    "auto_detect_interface": true,
+    "rules": [
+      { "action": "sniff" },
+      { "protocol": "dns", "action": "hijack-dns" },
+      { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
+      { "ip_is_private": true, "outbound": "direct" },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          { "rule_set": ["global", "ai", "imgur", "paypal"] },
+          { "protocol": "quic" }
+        ],
+        "action": "reject"
+      },
+      { "domain_suffix": ["lvh.me", "0x8.site"], "outbound": "home" },
+      {
+        "domain_suffix": [
+          "edge.apple",
+          "gmail.com",
+          "luee.net",
+          "oracle.com",
+          "oraclecloud.com",
+          "gptapi.us",
+          "micu.hk",
+          "litmos.com",
+          "0x8.site",
+          "bybit.global",
+          "bybit.biz",
+          "byapps.net",
+          "byd3c3.com",
+          "bybit.com",
+          "bochk.com",
+          "etnet.com.hk",
+          "daxiaamu.com"
+        ],
+        "outbound": "direct"
+      },
+      { "rule_set": ["ai", "paypal"], "outbound": "us" },
+      { "rule_set": ["imgur"], "outbound": "hk" },
+      { "rule_set": ["wechat", "apple", "chinamaxnoip"], "outbound": "direct" },
+      { "rule_set": ["global"], "outbound": "proxy" },
+      { "action": "resolve", "server": "china" },
+      { "rule_set": "chinaip", "outbound": "direct" }
+    ],
+    "final": "final",
+    "rule_set": [
+      {
+        "tag": "chinamaxnoip",
+        "download_detour": "proxy",
+        "format": "binary",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/ChinaMaxNoIP/ChinaMaxNoIP.srs"
+      },
+      {
+        "tag": "global",
+        "download_detour": "proxy",
+        "format": "binary",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/Global/Global.srs"
+      },
+      {
+        "tag": "ai",
+        "download_detour": "proxy",
+        "format": "binary",
+        "type": "remote",
+        "url": "https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-category-ai-!cn.srs"
+      },
+      {
+        "tag": "imgur",
+        "download_detour": "proxy",
+        "format": "binary",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/Imgur/Imgur.srs"
+      },
+      {
+        "tag": "paypal",
+        "download_detour": "proxy",
+        "format": "binary",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/PayPal/PayPal.srs"
+      },
+      {
+        "tag": "wechat",
+        "download_detour": "proxy",
+        "format": "binary",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/WeChat/WeChat.srs"
+      },
+      {
+        "tag": "apple",
+        "download_detour": "proxy",
+        "format": "binary",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/Apple/Apple.srs"
+      },
+      {
+        "tag": "chinaip",
+        "download_detour": "proxy",
+        "format": "binary",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/ChinaIPs/ChinaIPs.srs"
+      }
+    ]
+  },
+  "endpoints": [
+    {
+      "tag": "ts",
+      "type": "tailscale",
+      "hostname": "{ts_hostname}",
+      "auth_key": "{ts_auth_key}"
+    }
+  ],
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "store_fakeip": true,
+      "store_rdrc": true
+    },
+    "clash_api": {
+      "external_controller": "[::]:9090",
+      "secret": "1118",
+      "access_control_allow_origin": ["*"],
+      "access_control_allow_private_network": true
+    }
+  }
+}

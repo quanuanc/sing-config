@@ -1,0 +1,11 @@
+[
+  {
+    "label": "sync",
+    "command": "rsync --delete -r . echo:/data/data/com.termux/files/home/storage/downloads/sing-box/",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "never",
+    "hide": "always",
+    "shell": "system"
+  }
+]
