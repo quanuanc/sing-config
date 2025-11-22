@@ -1,0 +1,30 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain": [
+        "staff-remoteaccess.hsbc.com.cn",
+        "staff-remoteaccess.hsbc.com.hk"
+      ],
+      "domain_suffix": [
+        "edge.apple",
+        "gmail.com",
+        "luee.net",
+        "oracle.com",
+        "oraclecloud.com",
+        "gptapi.us",
+        "micu.hk",
+        "litmos.com",
+        "0x8.site",
+        "bybit.global",
+        "bybit.biz",
+        "byapps.net",
+        "byd3c3.com",
+        "bybit.com",
+        "bochk.com",
+        "etnet.com.hk",
+        "daxiaamu.com"
+      ]
+    }
+  ]
+}
