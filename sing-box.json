@@ -2,7 +2,6 @@
   "log": {
     "disabled": false,
     "level": "warn",
-    "output": "box.log",
     "timestamp": true
   },
   "dns": {
@@ -25,7 +24,7 @@
         "endpoint": "ts"
       }
     ],
-    "rules_gui": [
+    "rules": [
       { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
       {
         "type": "logical",
@@ -35,27 +34,6 @@
         "rcode": "NOERROR"
       },
       { "query_type": ["A", "AAAA"], "server": "fake" }
-    ],
-    "rules_tethering": [
-      { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
-      {
-        "type": "logical",
-        "mode": "and",
-        "rules": [{ "rule_set": "global" }, { "query_type": "HTTPS" }],
-        "action": "predefined",
-        "rcode": "NOERROR"
-      },
-      {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          { "rule_set": ["chinamaxnoip", "wechat", "apple"] },
-          { "query_type": "AAAA" }
-        ],
-        "server": "china"
-      },
-      { "query_type": ["AAAA"], "action": "predefined", "rcode": "NOERROR" },
-      { "query_type": ["A"], "server": "fake" }
     ],
     "final": "china",
     "independent_cache": true
