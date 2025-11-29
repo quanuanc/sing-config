@@ -5,12 +5,13 @@
     "timestamp": true
   },
   "dns": {
+    "final": "china",
+    "independent_cache": true,
     "servers": [
       {
         "tag": "china",
-        "type": "udp",
-        "server": "119.29.29.29",
-        "server_port": 53
+        "type": "local",
+        "prefer_go": true
       },
       {
         "tag": "fake",
@@ -34,9 +35,7 @@
         "rcode": "NOERROR"
       },
       { "query_type": ["A", "AAAA"], "rewrite_ttl": 30, "server": "fake" }
-    ],
-    "final": "china",
-    "independent_cache": true
+    ]
   },
   "inbounds": [
     {
@@ -115,6 +114,7 @@
   "route": {
     "default_domain_resolver": "china",
     "auto_detect_interface": true,
+    "final": "final",
     "rules": [
       { "action": "sniff" },
       { "protocol": "dns", "action": "hijack-dns" },
@@ -136,11 +136,10 @@
         "rule_set": ["wechat", "apple", "chinamax", "direct"],
         "outbound": "direct"
       },
-      { "rule_set": ["global"], "outbound": "proxy" },
+      { "rule_set": ["global", "tg"], "outbound": "proxy" },
       { "action": "resolve", "server": "china" },
       { "rule_set": "chinaip", "outbound": "direct" }
     ],
-    "final": "final",
     "rule_set": [
       {
         "tag": "direct",
@@ -177,6 +176,12 @@
         "download_detour": "proxy",
         "type": "remote",
         "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/PayPal/PayPal.srs"
+      },
+      {
+        "tag": "tg",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/Telegram/Telegram.srs"
       },
       {
         "tag": "wechat",
