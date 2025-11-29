@@ -33,7 +33,7 @@
         "action": "predefined",
         "rcode": "NOERROR"
       },
-      { "query_type": ["A", "AAAA"], "server": "fake" }
+      { "query_type": ["A", "AAAA"], "rewrite_ttl": 30, "server": "fake" }
     ],
     "final": "china",
     "independent_cache": true
