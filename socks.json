@@ -2,6 +2,7 @@
   "log": {
     "disabled": false,
     "level": "warn",
+    "output": "box.log",
     "timestamp": true
   },
   "dns": {
@@ -10,23 +11,17 @@
     "servers": [
       {
         "tag": "china",
-        "type": "local",
-        "prefer_go": true
+        "type": "udp",
+        "server": "119.29.29.29"
       },
       {
         "tag": "fake",
         "type": "fakeip",
         "inet4_range": "198.18.0.0/15",
         "inet6_range": "fc00::/18"
-      },
-      {
-        "tag": "ts",
-        "type": "tailscale",
-        "endpoint": "ts"
       }
     ],
     "rules": [
-      { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
       {
         "type": "logical",
         "mode": "and",
@@ -39,30 +34,64 @@
   },
   "inbounds": [
     {
-      "tag": "http",
-      "type": "http",
+      "tag": "mixed-in",
+      "type": "mixed",
       "listen": "127.0.0.1",
-      "listen_port": 6152
+      "listen_port": 6155
     },
     {
-      "tag": "socks",
-      "type": "socks",
-      "listen": "127.0.0.1",
-      "listen_port": 6153
-    },
-    {
-      "tag": "tun",
-      "type": "tun",
-      "address": ["172.18.0.1/30", "fdfe:dcba:9876::1/126"],
-      "auto_route": true,
-      "loopback_address": ["10.7.0.1"],
-      "stack": "mixed",
-      "platform": {
-        "http_proxy": {
-          "enabled": true,
-          "server": "127.0.0.1",
-          "server_port": 6152
+      "tag": "hy2-in",
+      "type": "hysteria2",
+      "listen": "::",
+      "listen_port": 6156,
+      "up_mbps": 100,
+      "down_mbps": 100,
+      "users": [
+        {
+          "name": "cheng",
+          "password": "eHNzEQPvN+qLdhkfWfRDMg=="
         }
+      ],
+      "tls": {
+        "enabled": true,
+        "server_name": "bing.com",
+        "key_path": "/data/data/com.termux/files/usr/etc/sing-box/private.key",
+        "certificate_path": "/data/data/com.termux/files/usr/etc/sing-box/cert.pem"
+      }
+    },
+    {
+      "tag": "tuic-in",
+      "type": "tuic",
+      "listen": "::",
+      "listen_port": 6157,
+      "users": [
+        {
+          "name": "cheng",
+          "uuid": "507c5fb4-403b-4c51-a9e0-0e5aa2eb39f5",
+          "password": "1118"
+        }
+      ],
+      "congestion_control": "bbr",
+      "auth_timeout": "3s",
+      "zero_rtt_handshake": true,
+      "heartbeat": "10s",
+      "tls": {
+        "enabled": true,
+        "server_name": "bing.com",
+        "key_path": "/data/data/com.termux/files/usr/etc/sing-box/private.key",
+        "certificate_path": "/data/data/com.termux/files/usr/etc/sing-box/cert.pem"
+      }
+    },
+    {
+      "tag": "ss-in",
+      "type": "shadowsocks",
+      "listen": "::",
+      "listen_port": 6158,
+      "network": "tcp",
+      "method": "2022-blake3-aes-128-gcm",
+      "password": "Np55XL2aRTdXDspvdoF01A==",
+      "multiplex": {
+        "enabled": true
       }
     }
   ],
@@ -71,12 +100,6 @@
       "tag": "proxy",
       "type": "selector",
       "outbounds": ["xx", "hk", "us"],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "home",
-      "type": "selector",
-      "outbounds": ["direct"],
       "interrupt_exist_connections": true
     },
     {
@@ -116,7 +139,6 @@
     "rules": [
       { "action": "sniff" },
       { "protocol": "dns", "action": "hijack-dns" },
-      { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
       { "ip_is_private": true, "outbound": "direct" },
       {
         "type": "logical",
@@ -201,14 +223,6 @@
       }
     ]
   },
-  "endpoints": [
-    {
-      "tag": "ts",
-      "type": "tailscale",
-      "hostname": "{ts_hostname}",
-      "auth_key": "{ts_auth_key}"
-    }
-  ],
   "experimental": {
     "cache_file": {
       "enabled": true,
@@ -216,7 +230,7 @@
       "store_rdrc": true
     },
     "clash_api": {
-      "external_controller": "[::]:9090",
+      "external_controller": "[::]:9091",
       "secret": "1118",
       "access_control_allow_origin": ["*"],
       "access_control_allow_private_network": true
