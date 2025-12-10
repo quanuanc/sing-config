@@ -61,7 +61,10 @@
         "http_proxy": {
           "enabled": true,
           "server": "127.0.0.1",
-          "server_port": 6152
+          "server_port": 6152,
+          "bypass_domain": [
+            "localhost", "*.local", "*.tailscale.com"
+          ]
         }
       }
     }
