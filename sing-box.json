@@ -1,7 +1,7 @@
 {
   "log": {
     "disabled": false,
-    "level": "warn",
+    "level": "info",
     "timestamp": true
   },
   "dns": {
@@ -26,11 +26,17 @@
       }
     ],
     "rules": [
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [{ "domain_suffix": ["push.apple.com"] }],
+        "server": "china"
+      },
       { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
       {
         "type": "logical",
         "mode": "and",
-        "rules": [{ "rule_set": "global" }, { "query_type": "HTTPS" }],
+        "rules": [{ "query_type": "HTTPS" }, { "rule_set": "global" }],
         "action": "predefined",
         "rcode": "NOERROR"
       },
@@ -62,34 +68,45 @@
           "enabled": true,
           "server": "127.0.0.1",
           "server_port": 6152,
-          "bypass_domain": [
-            "localhost", "*.local", "*.tailscale.com"
-          ]
+          "bypass_domain": ["*.local", "*.push.apple.com"]
         }
-      }
+      },
+      "route_exclude_address": [
+        "17.0.0.0/8",
+        "2403:300::/32",
+        "2620:149::/32",
+        "2a01:b740::/32"
+      ]
     }
   ],
   "outbounds": [
     {
       "tag": "proxy",
       "type": "selector",
-      "outbounds": ["xx", "hk", "us"],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "home",
-      "type": "selector",
-      "outbounds": ["direct"],
+      "outbounds": ["x1", "x2"],
       "interrupt_exist_connections": true
     },
     {
       "tag": "final",
       "type": "selector",
-      "outbounds": ["proxy", "direct"],
+      "outbounds": ["x2", "x1", "direct"],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "xx",
+      "tag": "low",
+      "type": "selector",
+      "outbounds": ["x2", "x1", "direct"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "x1",
+      "type": "urltest",
+      "outbounds": [],
+      "tolerance": 80,
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "x2",
       "type": "urltest",
       "outbounds": [],
       "tolerance": 80,
@@ -99,13 +116,13 @@
       "tag": "hk",
       "type": "urltest",
       "outbounds": [],
-      "url": "http://captive.apple.com"
+      "url": "http://latency-test.skk.moe/endpoint"
     },
     {
       "tag": "us",
       "type": "urltest",
       "outbounds": [],
-      "url": "http://captive.apple.com"
+      "url": "http://latency-test.skk.moe/endpoint"
     },
     {
       "tag": "direct",
@@ -117,7 +134,7 @@
     "auto_detect_interface": true,
     "final": "final",
     "rules": [
-      { "action": "sniff" },
+      { "inbound": "tun", "action": "sniff" },
       { "protocol": "dns", "action": "hijack-dns" },
       { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
       { "ip_is_private": true, "outbound": "direct" },
@@ -125,12 +142,11 @@
         "type": "logical",
         "mode": "and",
         "rules": [
-          { "rule_set": ["global", "ai", "imgur", "paypal"] },
-          { "protocol": "quic" }
+          { "protocol": "quic" },
+          { "rule_set": ["global", "ai", "imgur", "paypal"] }
         ],
         "action": "reject"
       },
-      { "domain_suffix": ["lvh.me", "0x8.site"], "outbound": "home" },
       { "rule_set": ["ai", "paypal"], "outbound": "us" },
       { "rule_set": ["imgur"], "outbound": "hk" },
       {
