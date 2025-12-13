@@ -29,7 +29,10 @@
       {
         "type": "logical",
         "mode": "or",
-        "rules": [{ "domain_suffix": ["push.apple.com"] }],
+        "rules": [
+          { "domain_suffix": ["push.apple.com"] },
+          { "domain": ["captive.apple.com"] }
+        ],
         "server": "china"
       },
       { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
@@ -134,7 +137,11 @@
     "auto_detect_interface": true,
     "final": "final",
     "rules": [
-      { "inbound": "tun", "action": "sniff" },
+      {
+        "inbound": "tun",
+        "action": "sniff",
+        "sniffer": ["http", "tls", "quic", "dns"]
+      },
       { "protocol": "dns", "action": "hijack-dns" },
       { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
       { "ip_is_private": true, "outbound": "direct" },
@@ -143,13 +150,26 @@
         "mode": "and",
         "rules": [
           { "protocol": "quic" },
-          { "rule_set": ["global", "speedtest", "cdn", "stream", "download"] }
+          {
+            "rule_set": [
+              "myai",
+              "ai",
+              "paypal",
+              "speedtest",
+              "cdn",
+              "stream",
+              "download",
+              "myproxy",
+              "global"
+            ]
+          }
         ],
         "action": "reject"
       },
-      { "rule_set": ["ai", "paypal"], "outbound": "us" },
+      { "rule_set": ["myai", "ai", "paypal"], "outbound": "us" },
       {
         "rule_set": [
+          "mydirect",
           "wechat",
           "apple_cdn",
           "apple_service",
@@ -166,13 +186,25 @@
         "rule_set": ["speedtest", "cdn", "stream", "download"],
         "outbound": "low"
       },
-      { "rule_set": ["global", "tg_ip"], "outbound": "proxy" },
+      { "rule_set": ["tg", "myproxy", "global"], "outbound": "proxy" },
       { "action": "resolve", "server": "china" },
       { "rule_set": "cn_ip", "outbound": "direct" }
     ],
     "rule_set": [
       {
-        "tag": "direct",
+        "tag": "myai",
+        "download_detour": "direct",
+        "type": "remote",
+        "url": "https://static.0x8.site/sing-box/rule/ai.json"
+      },
+      {
+        "tag": "myproxy",
+        "download_detour": "direct",
+        "type": "remote",
+        "url": "https://static.0x8.site/sing-box/rule/proxy.json"
+      },
+      {
+        "tag": "mydirect",
         "download_detour": "direct",
         "type": "remote",
         "url": "https://static.0x8.site/sing-box/rule/direct.json"
@@ -214,7 +246,7 @@
         "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_ai.srs"
       },
       {
-        "tag": "tg_ip",
+        "tag": "tg",
         "download_detour": "proxy",
         "type": "remote",
         "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/telegram_ip.srs"
