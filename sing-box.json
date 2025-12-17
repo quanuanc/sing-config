@@ -26,8 +26,6 @@
       }
     ],
     "rules": [
-      { "rule_set": "rejectdrop", "action": "reject", "method": "default" },
-      { "rule_set": "reject", "action": "reject", "method": "default" },
       { "domain": ["captive.apple.com"], "server": "china" },
       { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
       {
@@ -131,8 +129,6 @@
         "sniffer": ["http", "tls", "quic", "dns"]
       },
       { "protocol": "dns", "action": "hijack-dns" },
-      {"rule_set": "rejectdrop", "action": "reject", "method": "default" },
-      {"rule_set": "reject", "action": "reject", "method": "default" },
       { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
       { "ip_is_private": true, "outbound": "direct" },
       {
@@ -306,18 +302,6 @@
         "download_detour": "proxy",
         "type": "remote",
         "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/cn_ip.srs"
-      },
-      {
-        "tag": "rejectdrop",
-        "download_detour": "proxy",
-        "type": "remote",
-        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_reject_drop.srs"
-      },
-      {
-        "tag": "reject",
-        "download_detour": "proxy",
-        "type": "remote",
-        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_reject.srs"
       }
     ]
   },
