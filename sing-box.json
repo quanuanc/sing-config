@@ -26,15 +26,9 @@
       }
     ],
     "rules": [
-      {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          { "domain_suffix": ["push.apple.com"] },
-          { "domain": ["captive.apple.com"] }
-        ],
-        "server": "china"
-      },
+      { "rule_set": "rejectdrop", "action": "reject", "method": "default" },
+      { "rule_set": "reject", "action": "reject", "method": "default" },
+      { "domain": ["captive.apple.com"], "server": "china" },
       { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
       {
         "type": "logical",
@@ -71,15 +65,9 @@
           "enabled": true,
           "server": "127.0.0.1",
           "server_port": 6152,
-          "bypass_domain": ["*.local", "*.push.apple.com"]
+          "bypass_domain": ["*.local", "captive.apple.com"]
         }
-      },
-      "route_exclude_address": [
-        "17.0.0.0/8",
-        "2403:300::/32",
-        "2620:149::/32",
-        "2a01:b740::/32"
-      ]
+      }
     }
   ],
   "outbounds": [
@@ -143,6 +131,8 @@
         "sniffer": ["http", "tls", "quic", "dns"]
       },
       { "protocol": "dns", "action": "hijack-dns" },
+      {"rule_set": "rejectdrop", "action": "reject", "method": "default" },
+      {"rule_set": "reject", "action": "reject", "method": "default" },
       { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
       { "ip_is_private": true, "outbound": "direct" },
       {
@@ -316,6 +306,18 @@
         "download_detour": "proxy",
         "type": "remote",
         "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/cn_ip.srs"
+      },
+      {
+        "tag": "rejectdrop",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_reject_drop.srs"
+      },
+      {
+        "tag": "reject",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_reject.srs"
       }
     ]
   },
