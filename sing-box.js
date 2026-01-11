@@ -1,18 +1,18 @@
 let config = JSON.parse($files[0]);
 let mainProxies = await produceArtifact({
-  name: "Main",
+  name: "X1",
   type: "collection",
   platform: "sing-box",
   produceType: "internal",
 });
-let basicProxies = await produceArtifact({
-  name: "Basic-Sing",
+let secondaryProxies = await produceArtifact({
+  name: "X2",
   type: "collection",
   platform: "sing-box",
   produceType: "internal",
 });
 
-processSubscribe(config, mainProxies, basicProxies);
+processSubscribe(config, mainProxies, secondaryProxies);
 processTailscale(config);
 processTethering(config);
 
