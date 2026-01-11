@@ -21,7 +21,7 @@ $content = JSON.stringify(config, null, 2);
 // util functions
 function processSubscribe(config, mainProxies, basicProxies) {
   let filteredProxies = new Set();
-  let xFilter = /香港|日本|新加坡|台湾|HK|TW|SG|JP/i;
+  let xFilter = null;
   let hkFilter = /香港|HK/i;
   let usFilter = /美国|USA/i;
 
