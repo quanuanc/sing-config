@@ -90,7 +90,7 @@ function processTailscale(config) {
   if (tsKey === undefined) {
     console.log("ts_key not set for ts_host: " + tsHost);
   }
-  if (tsHost === "vim") {
+  if (tsHost === "no-ts") {
     removeTailscale(config);
   }
   config.endpoints.forEach((ep) => {
