@@ -10,7 +10,7 @@
     "servers": [
       {
         "tag": "china",
-        "server": "221.5.88.88",
+        "server": "119.29.29.29",
         "type": "udp"
       },
       {
