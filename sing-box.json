@@ -40,16 +40,11 @@
   },
   "inbounds": [
     {
-      "tag": "http",
-      "type": "http",
+      "tag": "mixed",
+      "type": "mixed",
       "listen": "127.0.0.1",
-      "listen_port": 6152
-    },
-    {
-      "tag": "socks",
-      "type": "socks",
-      "listen": "127.0.0.1",
-      "listen_port": 6153
+      "listen_port": 6153,
+      "set_system_proxy": true
     },
     {
       "tag": "tun",
@@ -62,7 +57,7 @@
         "http_proxy": {
           "enabled": true,
           "server": "127.0.0.1",
-          "server_port": 6152,
+          "server_port": 6153,
           "bypass_domain": ["*.local", "captive.apple.com"]
         }
       }
