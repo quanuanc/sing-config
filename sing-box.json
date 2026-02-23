@@ -44,7 +44,7 @@
       "type": "mixed",
       "listen": "127.0.0.1",
       "listen_port": 6153,
-      "set_system_proxy": true
+      "set_system_proxy": false
     },
     {
       "tag": "tun",
