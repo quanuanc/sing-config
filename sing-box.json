@@ -95,6 +95,7 @@
       "type": "urltest",
       "outbounds": [],
       "tolerance": 80,
+      "url": "http://latency-test.skk.moe/endpoint",
       "interrupt_exist_connections": true
     },
     {
@@ -102,19 +103,22 @@
       "type": "urltest",
       "outbounds": [],
       "tolerance": 80,
+      "url": "http://latency-test.skk.moe/endpoint",
       "interrupt_exist_connections": true
     },
     {
       "tag": "hk",
       "type": "urltest",
       "outbounds": [],
-      "url": "http://latency-test.skk.moe/endpoint"
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
     },
     {
       "tag": "us",
       "type": "urltest",
       "outbounds": [],
-      "url": "http://latency-test.skk.moe/endpoint"
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
     },
     {
       "tag": "direct",
