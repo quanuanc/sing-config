@@ -14,6 +14,12 @@
         "type": "udp"
       },
       {
+        "tag": "google",
+        "server": "8.8.8.8",
+        "type": "udp",
+        "detour": "proxy"
+      },
+      {
         "tag": "fake",
         "type": "fakeip",
         "inet4_range": "198.18.0.0/15",
@@ -26,6 +32,8 @@
       }
     ],
     "rules": [
+      { "clash_mode": "direct", "server": "china" },
+      { "clash_mode": "proxy", "server": "google" },
       { "domain": ["captive.apple.com"], "server": "china" },
       { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
       {
@@ -126,6 +134,8 @@
       { "protocol": "dns", "action": "hijack-dns" },
       { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
       { "ip_is_private": true, "outbound": "direct" },
+      { "clash_mode": "direct", "outbound": "direct" },
+      { "clash_mode": "proxy", "outbound": "proxy" },
       {
         "type": "logical",
         "mode": "and",
@@ -317,6 +327,7 @@
     "clash_api": {
       "external_controller": "[::]:9090",
       "secret": "1118",
+      "default_mode": "rule",
       "access_control_allow_origin": ["*"],
       "access_control_allow_private_network": true
     }
