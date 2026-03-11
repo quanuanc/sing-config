@@ -93,9 +93,8 @@ function processTailscale(config) {
   if (tsHost === "no-ts") {
     removeTailscale(config);
   }
-  const tsExitNode = arguments.ts_exit_node;
-  const tsAdvertiseExit = arguments.ts_advertise_exit;
-  console.log("ts_exit_node: " + tsExitNode + ", ts_advertise_exit: " + tsAdvertiseExit)
+  const tsExitNode = $arguments.ts_exit_node;
+  const tsAdvertiseExit = $arguments.ts_advertise_exit;
   config.endpoints.forEach((ep) => {
     if (ep.type === "tailscale") {
       ep.hostname = tsHost;
