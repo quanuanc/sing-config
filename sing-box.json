@@ -155,13 +155,13 @@
           {
             "rule_set": [
               "myai",
+              "myproxy",
               "ai",
               "paypal",
               "speedtest",
               "cdn",
               "stream",
               "download",
-              "myproxy",
               "global"
             ]
           }
@@ -188,28 +188,28 @@
         "rule_set": ["speedtest", "cdn", "stream", "download"],
         "outbound": "low"
       },
-      { "rule_set": ["tg", "myproxy", "global"], "outbound": "proxy" },
+      { "rule_set": ["myproxy", "tg", "global"], "outbound": "proxy" },
       { "action": "resolve", "server": "china" },
       { "rule_set": "cn_ip", "outbound": "direct" }
     ],
     "rule_set": [
       {
         "tag": "myai",
-        "download_detour": "direct",
+        "download_detour": "proxy",
         "type": "remote",
-        "url": "https://static.0x8.site/sing-box/rule/ai.json"
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/sing-config@main/rule/ai.srs"
       },
       {
         "tag": "myproxy",
-        "download_detour": "direct",
+        "download_detour": "proxy",
         "type": "remote",
-        "url": "https://static.0x8.site/sing-box/rule/proxy.json"
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/sing-config@main/rule/proxy.srs"
       },
       {
         "tag": "mydirect",
-        "download_detour": "direct",
+        "download_detour": "proxy",
         "type": "remote",
-        "url": "https://static.0x8.site/sing-box/rule/direct.json"
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/sing-config@main/rule/direct.srs"
       },
       {
         "tag": "paypal",

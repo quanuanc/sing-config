@@ -6,6 +6,15 @@
     "allow_concurrent_runs": false,
     "reveal": "never",
     "hide": "always",
-    "shell": "system"
-  }
+    "shell": "system",
+  },
+  {
+    "label": "compile",
+    "command": "for file in rule/*.json; test -f $file; and sing-box rule-set compile $file; end",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "never",
+    "hide": "always",
+    "shell": "system",
+  },
 ]
