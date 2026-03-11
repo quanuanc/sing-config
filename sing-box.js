@@ -103,7 +103,7 @@ function processTailscale(config) {
       ep.advertise_exit_node = tsAdvertiseExit;
     }
   });
-  if (!tsExitNode) {
+  if (tsExitNode === undefined) {
     // delete config ep exit_node
     config.endpoints.forEach((ep) => {
       if (ep.type === "tailscale") {
@@ -111,7 +111,7 @@ function processTailscale(config) {
       }
     });
   }
-  if (!tsAdvertiseExit) {
+  if (tsAdvertiseExit === undefined) {
     // delete config ep advertise_exit_node
     config.endpoints.forEach((ep) => {
       if (ep.type === "tailscale") {
