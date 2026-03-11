@@ -103,6 +103,22 @@ function processTailscale(config) {
       ep.advertise_exit_node = tsAdvertiseExit;
     }
   });
+  if (!tsExitNode) {
+    // delete config ep exit_node
+    config.endpoints.forEach((ep) => {
+      if (ep.type === "tailscale") {
+        delete ep.exit_node;
+      }
+    });
+  }
+  if (!tsAdvertiseExit) {
+    // delete config ep advertise_exit_node
+    config.endpoints.forEach((ep) => {
+      if (ep.type === "tailscale") {
+        delete ep.advertise_exit_node;
+      }
+    });
+  }
 }
 
 function processTethering(config) {
