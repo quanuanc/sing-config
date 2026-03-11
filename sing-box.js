@@ -93,10 +93,14 @@ function processTailscale(config) {
   if (tsHost === "no-ts") {
     removeTailscale(config);
   }
+  const tsExitNode = arguments.ts_exit_node;
+  const tsAdvertiseExit = arguments.ts_advertise_exit;
   config.endpoints.forEach((ep) => {
     if (ep.type === "tailscale") {
       ep.hostname = tsHost;
       ep.auth_key = tsKey;
+      ep.exit_node = tsExitNode;
+      ep.advertise_exit_node = tsAdvertiseExit;
     }
   });
 }

@@ -91,6 +91,12 @@
       "interrupt_exist_connections": true
     },
     {
+      "tag": "0x8",
+      "type": "selector",
+      "outbounds": ["direct", "ts"],
+      "interrupt_exist_connections": true
+    },
+    {
       "tag": "x1",
       "type": "urltest",
       "outbounds": [],
@@ -140,6 +146,7 @@
       { "ip_is_private": true, "outbound": "direct" },
       { "clash_mode": "direct", "outbound": "direct" },
       { "clash_mode": "proxy", "outbound": "proxy" },
+      { "domain_suffix": "0x8.site", "outbound": "0x8" },
       {
         "type": "logical",
         "mode": "and",
@@ -319,7 +326,9 @@
       "tag": "ts",
       "type": "tailscale",
       "hostname": "{ts_hostname}",
-      "auth_key": "{ts_auth_key}"
+      "auth_key": "{ts_auth_key}",
+      "exit_node": "{exit_node}",
+      "advertise_exit_node": "{advertise_exit_node}"
     }
   ],
   "experimental": {
