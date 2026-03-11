@@ -100,7 +100,6 @@ function processTailscale(config) {
       ep.hostname = tsHost;
       ep.auth_key = tsKey;
       ep.exit_node = tsExitNode;
-      ep.advertise_exit_node = true;
     }
   });
   if (tsExitNode === undefined) {

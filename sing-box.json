@@ -328,7 +328,7 @@
       "hostname": "{ts_hostname}",
       "auth_key": "{ts_auth_key}",
       "exit_node": "{exit_node}",
-      "advertise_exit_node": "{advertise_exit_node}"
+      "advertise_exit_node": true
     }
   ],
   "experimental": {
