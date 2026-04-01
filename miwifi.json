@@ -1,7 +1,7 @@
 {
   "log": {
     "disabled": false,
-    "level": "fatal",
+    "level": "warn",
     "timestamp": true
   },
   "dns": {
@@ -10,7 +10,7 @@
     "servers": [
       {
         "tag": "china",
-        "server": "119.29.29.29",
+        "server": "127.0.0.1",
         "type": "udp"
       },
       {
@@ -34,15 +34,22 @@
     "rules": [
       { "clash_mode": "direct", "server": "china" },
       { "clash_mode": "proxy", "server": "google" },
-      { "domain": ["captive.apple.com"], "server": "china" },
-      { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
       {
-        "type": "logical",
-        "mode": "and",
-        "rules": [{ "query_type": "HTTPS" }, { "rule_set": "global" }],
-        "action": "predefined",
-        "rcode": "NOERROR"
+        "rule_set": [
+          "mydirect",
+          "wechat",
+          "apple_cn",
+          "apple_cdn",
+          "apple_service",
+          "microsoft_cdn",
+          "neteasemusic",
+          "domestic",
+          "skkdirect",
+          "microsoft"
+        ],
+        "server": "china"
       },
+      { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
       { "query_type": ["A", "AAAA"], "rewrite_ttl": 30, "server": "fake" }
     ]
   },
@@ -59,16 +66,10 @@
       "type": "tun",
       "address": ["172.18.0.1/30", "fdfe:dcba:9876::1/126"],
       "auto_route": true,
+      "auto_redirect": true,
       "loopback_address": ["10.7.0.1"],
       "stack": "mixed",
-      "platform": {
-        "http_proxy": {
-          "enabled": true,
-          "server": "127.0.0.1",
-          "server_port": 6153,
-          "bypass_domain": ["*.local", "captive.apple.com"]
-        }
-      }
+      "exclude_interface": ["lo"]
     }
   ],
   "outbounds": [
@@ -88,12 +89,6 @@
       "tag": "final",
       "type": "selector",
       "outbounds": ["proxy", "direct"],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "0x8",
-      "type": "selector",
-      "outbounds": ["direct", "ts"],
       "interrupt_exist_connections": true
     },
     {
@@ -136,17 +131,17 @@
     "auto_detect_interface": true,
     "final": "final",
     "rules": [
+      { "ip_is_private": true, "outbound": "bypass" },
+      { "rule_set": ["cn_ip"], "outbound": "bypass" },
+      { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
+      { "port": "53", "action": "hijack-dns" },
+      { "clash_mode": "direct", "outbound": "direct" },
+      { "clash_mode": "proxy", "outbound": "proxy" },
       {
         "inbound": "tun",
         "action": "sniff",
-        "sniffer": ["http", "tls", "quic", "dns"]
+        "sniffer": ["http", "tls", "quic"]
       },
-      { "protocol": "dns", "action": "hijack-dns" },
-      { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
-      { "ip_is_private": true, "outbound": "direct" },
-      { "clash_mode": "direct", "outbound": "direct" },
-      { "clash_mode": "proxy", "outbound": "proxy" },
-      { "domain_suffix": "0x8.site", "outbound": "0x8" },
       {
         "rule_set": [
           "mydirect",

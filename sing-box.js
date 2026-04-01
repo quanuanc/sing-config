@@ -11,15 +11,21 @@ let secondaryProxies = await produceArtifact({
   platform: "sing-box",
   produceType: "internal",
 });
+let usProxies = await produceArtifact({
+  name: "US",
+  type: "collection",
+  platform: "sing-box",
+  produceType: "internal",
+});
 
-processSubscribe(config, mainProxies, secondaryProxies);
+
+processSubscribe(config, mainProxies, secondaryProxies, usProxies);
 processTailscale(config);
-processTethering(config);
 
 $content = JSON.stringify(config, null, 2);
 
 // util functions
-function processSubscribe(config, mainProxies, basicProxies) {
+function processSubscribe(config, mainProxies, secondaryProxies, usProxies) {
   let filteredProxies = new Set();
   let xFilter = null;
   let hkFilter = /香港|HK/i;
@@ -32,7 +38,7 @@ function processSubscribe(config, mainProxies, basicProxies) {
       tags.forEach((t) => filteredProxies.add(t));
     }
     if (["x2"].includes(i.tag)) {
-      const tags = getTags(basicProxies, xFilter);
+      const tags = getTags(secondaryProxies, xFilter);
       i.outbounds.push(...tags);
       tags.forEach((t) => filteredProxies.add(t));
     }
@@ -42,17 +48,12 @@ function processSubscribe(config, mainProxies, basicProxies) {
       tags.forEach((t) => filteredProxies.add(t));
     }
     if (["hk"].includes(i.tag)) {
-      const tags = getTags(basicProxies, hkFilter);
+      const tags = getTags(secondaryProxies, hkFilter);
       i.outbounds.push(...tags);
       tags.forEach((t) => filteredProxies.add(t));
     }
     if (["us"].includes(i.tag)) {
-      const tags = getTags(mainProxies, usFilter);
-      i.outbounds.push(...tags);
-      tags.forEach((t) => filteredProxies.add(t));
-    }
-    if (["us"].includes(i.tag)) {
-      const tags = getTags(basicProxies, usFilter);
+      const tags = getTags(usProxies, usFilter);
       i.outbounds.push(...tags);
       tags.forEach((t) => filteredProxies.add(t));
     }
@@ -63,7 +64,7 @@ function processSubscribe(config, mainProxies, basicProxies) {
       config.outbounds.push(proxy);
     }
   });
-  basicProxies.forEach((proxy) => {
+  secondaryProxies.forEach((proxy) => {
     if (filteredProxies.has(proxy.tag)) {
       config.outbounds.push(proxy);
     }
@@ -117,20 +118,6 @@ function processTailscale(config) {
         delete ep.advertise_exit_node;
       }
     });
-  }
-}
-
-function processTethering(config) {
-  let tethering = $arguments.tethering;
-  if (tethering === undefined) tethering = false;
-  if (tethering) {
-    config.inbounds = config.inbounds.filter(
-      (inbound) => inbound.type !== "tun",
-    );
-  } else {
-    config.inbounds = config.inbounds.filter(
-      (inbound) => inbound.type !== "tproxy",
-    );
   }
 }
 
