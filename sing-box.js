@@ -69,6 +69,11 @@ function processSubscribe(config, mainProxies, secondaryProxies, usProxies) {
       config.outbounds.push(proxy);
     }
   });
+  usProxies.forEach((proxy) => {
+    if (filteredProxies.has(proxy.tag)) {
+      config.outbounds.push(proxy);
+    }
+  });
 
   config.outbounds.forEach((outbound) => {
     if (Array.isArray(outbound.outbounds) && outbound.outbounds.length === 0) {
