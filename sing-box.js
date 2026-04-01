@@ -80,6 +80,9 @@ function processSubscribe(config, mainProxies, secondaryProxies, usProxies) {
       outbound.outbounds.push("direct");
     }
   });
+
+  // 去重 config.outbounds，依据 outbound.tag，保留第一次出现的顺序
+  dedupeOutbounds(config);
 }
 
 function getTags(proxies, regex) {
@@ -156,4 +159,25 @@ function removeTailscale(config) {
       (rule) => rule.outbound !== tsTag,
     );
   }
+}
+
+// 根据 outbound.tag 去重 config.outbounds，保留第一次出现的 outbound
+function dedupeOutbounds(config) {
+  if (!config || !Array.isArray(config.outbounds)) return;
+  const seen = new Set();
+  const result = [];
+  for (const outbound of config.outbounds) {
+    // 如果没有 tag 字段或 tag 不是字符串，直接保留（无法进行按 tag 去重）
+    if (!outbound || typeof outbound.tag !== "string") {
+      result.push(outbound);
+      continue;
+    }
+    if (!seen.has(outbound.tag)) {
+      seen.add(outbound.tag);
+      result.push(outbound);
+    } else {
+      // 已存在相同 tag 的 outbound，跳过（如果需要合并行为，可在此处扩展）
+    }
+  }
+  config.outbounds = result;
 }
