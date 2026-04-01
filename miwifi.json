@@ -134,7 +134,7 @@
       { "ip_is_private": true, "outbound": "bypass" },
       { "rule_set": ["cn_ip"], "outbound": "bypass" },
       { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
-      { "port": "53", "action": "hijack-dns" },
+      { "port": 53, "action": "hijack-dns" },
       { "clash_mode": "direct", "outbound": "direct" },
       { "clash_mode": "proxy", "outbound": "proxy" },
       {
