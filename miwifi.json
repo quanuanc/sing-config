@@ -49,6 +49,27 @@
         ],
         "server": "china"
       },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          { "query_type": "HTTPS" },
+          {
+            "rule_set": [
+              "myai",
+              "myproxy",
+              "paypal",
+              "cdn",
+              "stream",
+              "ai",
+              "download",
+              "proxy"
+            ]
+          }
+        ],
+        "action": "predefined",
+        "rcode": "NOERROR"
+      },
       { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
       { "query_type": ["A", "AAAA"], "rewrite_ttl": 30, "server": "fake" }
     ]
