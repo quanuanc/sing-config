@@ -183,7 +183,7 @@
         "outbound": "low"
       },
       { "rule_set": ["myproxy", "tg_ip", "global"], "outbound": "proxy" },
-      { "action": "resolve", "server": "china" },
+      { "action": "resolve", "server": "china", "match_only": true },
       { "rule_set": "cn_ip", "outbound": "direct" }
     ],
     "rule_set": [
