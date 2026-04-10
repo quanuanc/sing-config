@@ -17,15 +17,26 @@ let usProxies = await produceArtifact({
   platform: "sing-box",
   produceType: "internal",
 });
+let aiProxies = await produceArtifact({
+  name: "AI",
+  type: "collection",
+  platform: "sing-box",
+  produceType: "internal",
+});
 
-
-processSubscribe(config, mainProxies, secondaryProxies, usProxies);
+processSubscribe(config, mainProxies, secondaryProxies, usProxies, aiProxies);
 processTailscale(config);
 
 $content = JSON.stringify(config, null, 2);
 
 // util functions
-function processSubscribe(config, mainProxies, secondaryProxies, usProxies) {
+function processSubscribe(
+  config,
+  mainProxies,
+  secondaryProxies,
+  usProxies,
+  aiProxies,
+) {
   let filteredProxies = new Set();
   let xFilter = null;
   let hkFilter = /香港|HK/i;
@@ -57,6 +68,11 @@ function processSubscribe(config, mainProxies, secondaryProxies, usProxies) {
       i.outbounds.push(...tags);
       tags.forEach((t) => filteredProxies.add(t));
     }
+    if (["ai"].includes(i.tag)) {
+      const tags = getTags(aiProxies, usFilter);
+      i.outbounds.push(...tags);
+      tags.forEach((t) => filteredProxies.add(t));
+    }
   });
 
   mainProxies.forEach((proxy) => {
@@ -70,6 +86,11 @@ function processSubscribe(config, mainProxies, secondaryProxies, usProxies) {
     }
   });
   usProxies.forEach((proxy) => {
+    if (filteredProxies.has(proxy.tag)) {
+      config.outbounds.push(proxy);
+    }
+  });
+  aiProxies.forEach((proxy) => {
     if (filteredProxies.has(proxy.tag)) {
       config.outbounds.push(proxy);
     }

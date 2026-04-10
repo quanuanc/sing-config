@@ -1,8 +1,9 @@
 {
   "log": {
     "disabled": false,
-    "level": "fatal",
-    "timestamp": true
+    "level": "warn",
+    "timestamp": true,
+    "output": "box.log"
   },
   "dns": {
     "final": "china",
@@ -127,6 +128,13 @@
       "interrupt_exist_connections": true
     },
     {
+      "tag": "ai",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
       "tag": "direct",
       "type": "direct"
     }
@@ -136,16 +144,16 @@
     "auto_detect_interface": true,
     "final": "final",
     "rules": [
+      { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
+      { "ip_is_private": true, "outbound": "direct" },
+      { "clash_mode": "direct", "outbound": "direct" },
+      { "clash_mode": "proxy", "outbound": "proxy" },
       {
         "inbound": "tun",
         "action": "sniff",
         "sniffer": ["http", "tls", "quic", "dns"]
       },
       { "protocol": "dns", "action": "hijack-dns" },
-      { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
-      { "ip_is_private": true, "outbound": "direct" },
-      { "clash_mode": "direct", "outbound": "direct" },
-      { "clash_mode": "proxy", "outbound": "proxy" },
       { "domain_suffix": "0x8.site", "outbound": "0x8" },
       {
         "rule_set": [
@@ -182,11 +190,9 @@
         ],
         "action": "reject"
       },
-      { "rule_set": ["myai", "ai", "paypal"], "outbound": "us" },
-      {
-        "rule_set": ["cdn", "download"],
-        "outbound": "low"
-      },
+      { "rule_set": ["paypal"], "outbound": "us" },
+      { "rule_set": ["myai", "ai"], "outbound": "ai" },
+      { "rule_set": ["cdn", "download"], "outbound": "low" },
       { "rule_set": ["myproxy", "tg_ip", "global"], "outbound": "proxy" },
       { "action": "resolve", "server": "china" },
       { "rule_set": "cn_ip", "outbound": "direct" }

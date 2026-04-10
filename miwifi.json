@@ -144,6 +144,13 @@
       "interrupt_exist_connections": true
     },
     {
+      "tag": "ai",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
       "tag": "direct",
       "type": "direct"
     }
@@ -199,11 +206,9 @@
         ],
         "action": "reject"
       },
-      { "rule_set": ["myai", "ai", "paypal"], "outbound": "us" },
-      {
-        "rule_set": ["cdn", "download"],
-        "outbound": "low"
-      },
+      { "rule_set": ["paypal"], "outbound": "us" },
+      { "rule_set": ["myai", "ai"], "outbound": "ai" },
+      { "rule_set": ["cdn", "download"], "outbound": "low" },
       { "rule_set": ["myproxy", "tg_ip", "global"], "outbound": "proxy" },
       { "action": "resolve", "server": "china", "match_only": true },
       { "rule_set": "cn_ip", "outbound": "direct" }
