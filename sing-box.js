@@ -38,18 +38,16 @@ function processSubscribe(
   aiProxies,
 ) {
   let filteredProxies = new Set();
-  let xFilter = null;
   let hkFilter = /香港|HK/i;
-  let usFilter = /美国|USA/i;
 
   config.outbounds.forEach((i) => {
     if (["x1"].includes(i.tag)) {
-      const tags = getTags(mainProxies, xFilter);
+      const tags = getTags(mainProxies, null);
       i.outbounds.push(...tags);
       tags.forEach((t) => filteredProxies.add(t));
     }
     if (["x2"].includes(i.tag)) {
-      const tags = getTags(secondaryProxies, xFilter);
+      const tags = getTags(secondaryProxies, null);
       i.outbounds.push(...tags);
       tags.forEach((t) => filteredProxies.add(t));
     }
@@ -64,12 +62,12 @@ function processSubscribe(
       tags.forEach((t) => filteredProxies.add(t));
     }
     if (["us"].includes(i.tag)) {
-      const tags = getTags(usProxies, usFilter);
+      const tags = getTags(usProxies, null);
       i.outbounds.push(...tags);
       tags.forEach((t) => filteredProxies.add(t));
     }
     if (["ai"].includes(i.tag)) {
-      const tags = getTags(aiProxies, usFilter);
+      const tags = getTags(aiProxies, null);
       i.outbounds.push(...tags);
       tags.forEach((t) => filteredProxies.add(t));
     }
