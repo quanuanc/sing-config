@@ -47,105 +47,12 @@
       { "query_type": ["A", "AAAA"], "rewrite_ttl": 30, "server": "fake" }
     ]
   },
-  "inbounds": [
-    {
-      "tag": "mixed",
-      "type": "mixed",
-      "listen": "127.0.0.1",
-      "listen_port": 6153,
-      "set_system_proxy": false
-    },
-    {
-      "tag": "tun",
-      "type": "tun",
-      "address": ["172.18.0.1/30", "fdfe:dcba:9876::1/126"],
-      "auto_route": true,
-      "loopback_address": ["10.7.0.1"],
-      "stack": "mixed",
-      "platform": {
-        "http_proxy": {
-          "enabled": true,
-          "server": "127.0.0.1",
-          "server_port": 6153,
-          "bypass_domain": ["*.local", "captive.apple.com"]
-        }
-      }
-    }
-  ],
-  "outbounds": [
-    {
-      "tag": "proxy",
-      "type": "selector",
-      "outbounds": ["x1", "x2"],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "low",
-      "type": "selector",
-      "outbounds": ["x2", "x1"],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "final",
-      "type": "selector",
-      "outbounds": ["proxy", "direct"],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "0x8",
-      "type": "selector",
-      "outbounds": ["direct", "ts"],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "x1",
-      "type": "urltest",
-      "outbounds": [],
-      "tolerance": 80,
-      "url": "http://latency-test.skk.moe/endpoint",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "x2",
-      "type": "urltest",
-      "outbounds": [],
-      "tolerance": 80,
-      "url": "http://latency-test.skk.moe/endpoint",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "hk",
-      "type": "urltest",
-      "outbounds": [],
-      "url": "http://latency-test.skk.moe/endpoint",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "us",
-      "type": "urltest",
-      "outbounds": [],
-      "url": "http://latency-test.skk.moe/endpoint",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "ai",
-      "type": "urltest",
-      "outbounds": [],
-      "url": "http://latency-test.skk.moe/endpoint",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "direct",
-      "type": "direct"
-    }
-  ],
   "route": {
     "default_domain_resolver": "china",
     "auto_detect_interface": true,
     "final": "final",
     "rules": [
       { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
-      { "ip_is_private": true, "outbound": "direct" },
       { "clash_mode": "direct", "outbound": "direct" },
       { "clash_mode": "proxy", "outbound": "proxy" },
       {
@@ -154,6 +61,7 @@
         "sniffer": ["http", "tls", "quic", "dns"]
       },
       { "protocol": "dns", "action": "hijack-dns" },
+      { "ip_is_private": true, "outbound": "direct" },
       { "domain_suffix": "0x8.site", "outbound": "0x8" },
       {
         "rule_set": [
@@ -320,6 +228,98 @@
       }
     ]
   },
+  "inbounds": [
+    {
+      "tag": "mixed",
+      "type": "mixed",
+      "listen": "127.0.0.1",
+      "listen_port": 6153,
+      "set_system_proxy": false
+    },
+    {
+      "tag": "tun",
+      "type": "tun",
+      "address": ["172.18.0.1/30", "fdfe:dcba:9876::1/126"],
+      "auto_route": true,
+      "loopback_address": ["10.7.0.1"],
+      "stack": "mixed",
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 6153,
+          "bypass_domain": ["*.local", "captive.apple.com"]
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "proxy",
+      "type": "selector",
+      "outbounds": ["x1", "x2"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "low",
+      "type": "selector",
+      "outbounds": ["x2", "x1"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "final",
+      "type": "selector",
+      "outbounds": ["proxy", "direct"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "0x8",
+      "type": "selector",
+      "outbounds": ["direct", "ts"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "x1",
+      "type": "urltest",
+      "outbounds": [],
+      "tolerance": 80,
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "x2",
+      "type": "urltest",
+      "outbounds": [],
+      "tolerance": 80,
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "hk",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "us",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "ai",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "direct",
+      "type": "direct"
+    }
+  ],
   "endpoints": [
     {
       "tag": "ts",

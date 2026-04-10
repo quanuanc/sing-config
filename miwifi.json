@@ -76,94 +76,15 @@
       { "query_type": ["A", "AAAA"], "rewrite_ttl": 30, "server": "fake" }
     ]
   },
-  "inbounds": [
-    {
-      "tag": "mixed",
-      "type": "mixed",
-      "listen": "127.0.0.1",
-      "listen_port": 6153,
-      "set_system_proxy": false
-    },
-    {
-      "tag": "tun",
-      "type": "tun",
-      "address": ["172.18.0.1/30", "fdfe:dcba:9876::1/126"],
-      "auto_route": true,
-      "auto_redirect": true,
-      "loopback_address": ["10.7.0.1"],
-      "stack": "mixed"
-    }
-  ],
-  "outbounds": [
-    {
-      "tag": "proxy",
-      "type": "selector",
-      "outbounds": ["x1", "x2"],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "low",
-      "type": "selector",
-      "outbounds": ["x2", "x1"],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "final",
-      "type": "selector",
-      "outbounds": ["proxy", "direct"],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "x1",
-      "type": "urltest",
-      "outbounds": [],
-      "tolerance": 80,
-      "url": "http://latency-test.skk.moe/endpoint",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "x2",
-      "type": "urltest",
-      "outbounds": [],
-      "tolerance": 80,
-      "url": "http://latency-test.skk.moe/endpoint",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "hk",
-      "type": "urltest",
-      "outbounds": [],
-      "url": "http://latency-test.skk.moe/endpoint",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "us",
-      "type": "urltest",
-      "outbounds": [],
-      "url": "http://latency-test.skk.moe/endpoint",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "ai",
-      "type": "urltest",
-      "outbounds": [],
-      "url": "http://latency-test.skk.moe/endpoint",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "direct",
-      "type": "direct"
-    }
-  ],
   "route": {
     "default_domain_resolver": "china",
     "auto_detect_interface": true,
     "final": "final",
     "rules": [
+      { "port": 53, "action": "hijack-dns" },
       { "ip_is_private": true, "action": "bypass" },
       { "rule_set": ["cn_ip"], "action": "bypass" },
       { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
-      { "port": 53, "action": "hijack-dns" },
       { "clash_mode": "direct", "outbound": "direct" },
       { "clash_mode": "proxy", "outbound": "proxy" },
       {
@@ -336,6 +257,85 @@
       }
     ]
   },
+  "inbounds": [
+    {
+      "tag": "mixed",
+      "type": "mixed",
+      "listen": "127.0.0.1",
+      "listen_port": 6153,
+      "set_system_proxy": false
+    },
+    {
+      "tag": "tun",
+      "type": "tun",
+      "address": ["172.18.0.1/30", "fdfe:dcba:9876::1/126"],
+      "auto_route": true,
+      "auto_redirect": true,
+      "loopback_address": ["10.7.0.1"],
+      "stack": "mixed"
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "proxy",
+      "type": "selector",
+      "outbounds": ["x1", "x2"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "low",
+      "type": "selector",
+      "outbounds": ["x2", "x1"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "final",
+      "type": "selector",
+      "outbounds": ["proxy", "direct"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "x1",
+      "type": "urltest",
+      "outbounds": [],
+      "tolerance": 80,
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "x2",
+      "type": "urltest",
+      "outbounds": [],
+      "tolerance": 80,
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "hk",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "us",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "ai",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "direct",
+      "type": "direct"
+    }
+  ],
   "endpoints": [
     {
       "tag": "ts",
