@@ -1,0 +1,293 @@
+{
+  "log": {
+    "disabled": false,
+    "level": "warn",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "china",
+        "type": "local"
+      },
+      {
+        "tag": "google",
+        "server": "8.8.8.8",
+        "type": "udp",
+        "detour": "proxy"
+      },
+      {
+        "tag": "fake",
+        "type": "fakeip",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      },
+      {
+        "tag": "ts",
+        "type": "tailscale",
+        "endpoint": "ts"
+      }
+    ],
+    "rules": [
+      { "domain_suffix": ["alai-wezen.ts.net"], "server": "ts" },
+      { "query_type": ["A", "AAAA"], "rewrite_ttl": 30, "server": "fake" }
+    ],
+    "final": "china"
+  },
+  "route": {
+    "default_domain_resolver": "china",
+    "auto_detect_interface": true,
+    "rules": [
+      { "ip_cidr": ["100.64.0.0/10"], "outbound": "ts" },
+      {
+        "action": "sniff",
+        "sniffer": ["http", "tls", "quic", "dns"]
+      },
+      { "protocol": "dns", "action": "hijack-dns" },
+      { "ip_is_private": true, "outbound": "direct" },
+      { "inbound": "6154", "outbound": "proxy" },
+      {
+        "rule_set": [
+          "mydirect",
+          "wechat",
+          "apple_cn",
+          "apple_cdn",
+          "apple_service",
+          "microsoft_cdn",
+          "neteasemusic",
+          "domestic",
+          "skkdirect",
+          "microsoft"
+        ],
+        "outbound": "direct"
+      },
+      { "rule_set": ["paypal"], "outbound": "us" },
+      { "rule_set": ["myai", "ai"], "outbound": "ai" },
+      { "rule_set": ["cdn", "download"], "outbound": "low" },
+      { "rule_set": "tg", "outbound": "proxy" },
+      { "rule_set": ["myproxy", "stream", "global"], "outbound": "proxy" },
+      { "action": "resolve", "server": "china" },
+      { "rule_set": "cn_ip", "outbound": "direct" }
+    ],
+    "final": "final",
+    "rule_set": [
+      {
+        "tag": "myai",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/sing-config@main/rule/ai.srs"
+      },
+      {
+        "tag": "myproxy",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/sing-config@main/rule/proxy.srs"
+      },
+      {
+        "tag": "mydirect",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/sing-config@main/rule/direct.srs"
+      },
+      {
+        "tag": "paypal",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/PayPal/PayPal.srs"
+      },
+      {
+        "tag": "wechat",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://cdn.jsdelivr.net/gh/quanuanc/singbox_ruleset@main/rule/WeChat/WeChat.srs"
+      },
+      {
+        "tag": "cdn",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_cdn.srs"
+      },
+      {
+        "tag": "stream",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_stream.srs"
+      },
+      {
+        "tag": "ai",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_ai.srs"
+      },
+      {
+        "tag": "tg",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/telegram_ip.srs"
+      },
+      {
+        "tag": "apple_cn",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_apple_cn.srs"
+      },
+      {
+        "tag": "apple_cdn",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_apple_cdn.srs"
+      },
+      {
+        "tag": "apple_service",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_apple_services.srs"
+      },
+      {
+        "tag": "microsoft_cdn",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_microsoft_cdn.srs"
+      },
+      {
+        "tag": "microsoft",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_microsoft.srs"
+      },
+      {
+        "tag": "neteasemusic",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_neteasemusic.srs"
+      },
+      {
+        "tag": "download",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_download.srs"
+      },
+      {
+        "tag": "domestic",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_domestic.srs"
+      },
+      {
+        "tag": "skkdirect",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_direct.srs"
+      },
+      {
+        "tag": "global",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/skk_global.srs"
+      },
+      {
+        "tag": "cn_ip",
+        "download_detour": "proxy",
+        "type": "remote",
+        "url": "https://github.com/Sentsuki/srs-box/raw/refs/heads/srs_release/cn_ip.srs"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "tag": "6153",
+      "type": "socks",
+      "listen": "::",
+      "listen_port": 6153
+    },
+    {
+      "tag": "6154",
+      "type": "socks",
+      "listen": "::",
+      "listen_port": 6154
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "proxy",
+      "type": "selector",
+      "outbounds": ["x1", "x2"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "low",
+      "type": "selector",
+      "outbounds": ["x2", "x1"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "final",
+      "type": "selector",
+      "outbounds": ["proxy", "direct"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "x1",
+      "type": "urltest",
+      "outbounds": [],
+      "tolerance": 80,
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "x2",
+      "type": "urltest",
+      "outbounds": [],
+      "tolerance": 80,
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "hk",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "us",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "ai",
+      "type": "urltest",
+      "outbounds": [],
+      "url": "http://latency-test.skk.moe/endpoint",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "direct",
+      "type": "direct"
+    }
+  ],
+  "endpoints": [
+    {
+      "tag": "ts",
+      "type": "tailscale",
+      "hostname": "{ts_hostname}",
+      "auth_key": "{ts_auth_key}",
+      "exit_node": "{exit_node}",
+      "advertise_exit_node": true
+    }
+  ],
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "store_fakeip": true
+    },
+    "clash_api": {
+      "external_controller": "[::]:9090",
+      "secret": "1118",
+      "access_control_allow_origin": ["*"],
+      "access_control_allow_private_network": true
+    }
+  }
+}
