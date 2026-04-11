@@ -258,9 +258,8 @@
     },
     {
       "tag": "ai",
-      "type": "urltest",
+      "type": "selector",
       "outbounds": [],
-      "url": "http://latency-test.skk.moe/endpoint",
       "interrupt_exist_connections": true
     },
     {
